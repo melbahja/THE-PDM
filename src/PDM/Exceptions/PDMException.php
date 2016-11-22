@@ -9,7 +9,7 @@
  */
 namespace PDM\Exceptions;
 
-class PDMExcepion extends \Exception
+class PDMException extends \Exception
 {
 	
 }

@@ -11,11 +11,14 @@
 namespace PDM; 
 
 /**
- * Require Constants 
+ * PDM Config Dir
  */
-require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Constants.config.php');
+define('PDM_CONFIG_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'Config');
 
-class PDM extends Loader implements Interfaces\PDM
+use Exceptions\PDMException;
+use Interfaces\PDM as pdmInterface;
+
+class PDM implements Interfaces\PDM
 {
 
 	/**
@@ -30,11 +33,16 @@ class PDM extends Loader implements Interfaces\PDM
 	private $commads = array('DDL', 'DML', 'DCL');
 
 	/**
+	 * loader
+	 */
+	private $loader;
+
+	/**
 	 * construct
 	 */
 	public function __construct() 
 	{ 
-
+		$this->loader = Loader::getInstance();
 	}
 
 	/**
@@ -62,20 +70,15 @@ class PDM extends Loader implements Interfaces\PDM
 	 * @param  string $config  file name in config directory
 	 * @return mixed
 	 */
-	public function load($command, $config = 'Database1')
+	public function load($command, $config)
 	{
-
-		$config = $this->config($config);
 
 		if (!in_array($command, $this->commads)) {
 		
-			exit('Error: Sql Command not exists');
+			throw new PDMException('Error: Sql Command not exists');
 		
-		} elseif ($config === false) {
+		}
 
-			exit('Error: config file not exists');
-		}	
-
-		return $this->command($command, $config);	
+		return $this->loader->command($command, $config);	
 	}
 } 

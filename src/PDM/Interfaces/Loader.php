@@ -12,7 +12,7 @@ namespace PDM\Interfaces;
 interface Loader
 {
 
-	public function config($config);
+	public static function getInstance();
 
 	public function command($command, $config);
 }

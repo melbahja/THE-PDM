@@ -7,25 +7,32 @@
  * @copyright 2016 Dinital.com
  * @license	http://opensource.org/licenses/MIT	MIT License
  */
-namespace PDM;
+namespace PDM\Pdo;
 
 class DCL
 {
 
+	/**
+	 * tables prefix
+	 */
 	protected $prefix;
+
+	/**
+	 * get db Connection
+	 */
 	public $connect;
 
 	/**
-	 * __construct
-	 * @param array $config
+	 * construct
+	 * @param array $config 
 	 */
 	public function __construct(array $config)
 	{
-		$connect = __NAMESPACE__ . '\\' . $config['manager'] . '\Connect'; 
-		$this->connect = $connect::getInstance();
+
+		$this->connect = Connect::getInstance();
 		$this->prefix	= $config['prefix'];
 		$this->connect->setConfig($config);
-		unset($config, $connect);
+		unset($config);
 	}
 
 	/**
@@ -53,7 +60,8 @@ class DCL
 	 */
 	public function grant($priv)
 	{
-		return $this->connect->query( $this->connect->sqlFormat("GRANT {$priv} ON @dbname TO '@user'@'@host'") );
+		if ($this->connect->query( $this->connect->sqlFormat("GRANT {$priv} ON @dbname TO '@user'@'@host'") )) return true;
+		return false;
 	}
 
 	/**
@@ -64,6 +72,7 @@ class DCL
 	 */
 	public function revoke($priv)
 	{
-		return $this->connect->query( $this->connect->sqlFormat("REVOKE {$priv} ON @dbname FROM '@user'@'@host'") );
+		if ($this->connect->query( $this->connect->sqlFormat("REVOKE {$priv} ON @dbname FROM '@user'@'@host'") )) return true;
+		return false;
 	}
 }

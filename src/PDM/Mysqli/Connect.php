@@ -9,13 +9,31 @@
  */
 namespace PDM\Mysqli;
 
+use \PDM\Exceptions\PDMException;
+
 class Connect extends \Mysqli
 {
 
-
+	/**
+	 * instance
+	 */
 	private static $instance;
-	private $config 		= false;
+
+	/**
+	 * config
+	 * @var boolean|array
+	 */
+	private $config = false;
+
+	/**
+	 * is connected
+	 * @var boolean
+	 */
 	private $isConnected = false;
+
+	/**
+	 * connected database name
+	 */
 	private $connectedDb = false; 
 
 	/**
@@ -75,7 +93,7 @@ class Connect extends \Mysqli
 	 */
 	public function sqlFormat($sql)
 	{	
-		return str_replace(array('@prefix_', '@charset', '@dbname', '@user', '@host'), array($this->config['prefix'], $this->config['charset'], $this->config['name'], $this->config['user'], $this->config['host']), $sql);
+		return str_replace(array('@prefix_', '@charset', '@dbname', '@user', '@host'), array($this->config['prefix'], $this->config['charset'], $this->config['info']['name'], $this->config['info']['user'], $this->config['info']['host']), $sql);
 	}
 
 	/**
@@ -103,12 +121,15 @@ class Connect extends \Mysqli
 	public function start() 
 	{
 
-		parent::__construct($this->config['host'], $this->config['user'], $this->config['pwd'], $this->config['name']);
+		parent::__construct($this->config['info']['host'], $this->config['info']['user'], $this->config['info']['pwd'], $this->config['info']['name']);
 
-		if ($this->connect_error) exit('Failed Connect to Database <br /> Error Info : ' . $this->connect_error);
+		if ($this->connect_error) {
+
+			throw new PDMException('Failed Connect to Database <br /> Error Info : ' . $this->connect_error);
+		} 
 
 		$this->set_charset($this->config['charset']);
-		$this->connectedDb	= $this->config['name'];
+		$this->connectedDb	= $this->config['info']['name'];
 		$this->isConnected	= true;
 	}
 }

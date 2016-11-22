@@ -7,25 +7,32 @@
  * @copyright 2016 Dinital.com
  * @license	http://opensource.org/licenses/MIT	MIT License
  */
-namespace PDM;
+namespace PDM\Pdo;
 
 class DDL
 {
 
+	/**
+	 * prefix
+	 */
 	protected $prefix;
+	
+	/**
+	 * Connection
+	 */
 	public $connect;
 
 	/**
-	 * __construct
-	 * @param array $config
+	 * construct
+	 * @param array $config 
 	 */
 	public function __construct(array $config)
 	{
-		$connect = __NAMESPACE__ . '\\' . $config['manager'] . '\Connect'; 
-		$this->connect = $connect::getInstance();
+
+		$this->connect = Connect::getInstance();
 		$this->prefix	= $config['prefix'];
 		$this->connect->setConfig($config);
-		unset($config, $connect);
+		unset($config);
 	}
 
 	/**
@@ -52,18 +59,12 @@ class DDL
 	 * @param  string $options table options
 	 * @return boolean
 	 */
-	public function create($table, array $data, $options = null)
+	public function create($table, $sql)
 	{
 
-		$sql = "CREATE TABLE @prefix_{$table} (";
-		
-		foreach ($data as $key => $val) {
-			$sql .= "`{$key}` {$val},";
-		}
-
-		$sql = $this->connect->sqlFormat( rtrim($sql, ',') .  ") {$options};" );
-
-		return $this->connect->query($sql);
+		$sql = $this->connect->sqlFormat("CREATE TABLE @prefix_{$table} {$sql}");
+		if ($this->connect->query($sql)) return true;
+		return false;
 	}
 
 	/**
@@ -73,7 +74,8 @@ class DDL
 	 */
 	public function drop($sql)
 	{
-		return $this->connect->query('DROP ' . $sql);
+		if ($this->connect->query('DROP ' . $this->connect->sqlFormat($sql) )) return true;
+		return false;
 	}
 
 	/**
@@ -84,7 +86,8 @@ class DDL
 	 */
 	public function alter($table, $sql)
 	{
-		return $this->connect->query($this->sqlFormat("ALTER TABLE {$this->prefix}{$table} $sql"));
+		if ($this->connect->query($this->connect->sqlFormat("ALTER TABLE {$this->prefix}{$table} $sql"))) return true;
+		return false;
 	}
 
 	/**
@@ -95,7 +98,8 @@ class DDL
 	 */
 	public function rename($table, $newName)
 	{
-		return $this->connect->query("RENAME TABLE {$this->prefix}{$table} TO {$this->prefix}{$newName}");
+		if ($this->connect->query("RENAME TABLE {$this->prefix}{$table} TO {$this->prefix}{$newName}")) return true;
+		return false;
 	}
 
 	/** 
@@ -105,7 +109,8 @@ class DDL
 	 */
 	public function truncate($table)
 	{
-		return $this->connect->query("TRUNCATE TABLE {$this->prefix}{$table}");
+		if ($this->connect->query("TRUNCATE TABLE {$this->prefix}{$table}")) return true;
+		return false;
 	}
 
 }

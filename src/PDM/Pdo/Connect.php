@@ -9,13 +9,32 @@
  */
 namespace PDM\PDO;
 
+use \PDM\Exceptions\PDMException;
+
 class Connect extends \PDO
 {
 
-
+	/**
+	 * Instance
+	 */
 	private static $instance;
-	private $config 		= false;
+	
+	/**
+	 * confg
+	 * @var boolean|array
+	 */
+	private $config = false;
+
+	/**
+	 * is connected
+	 * @var boolean
+	 */
 	private $isConnected = false;
+
+	/**
+	 * connected db name
+	 * @var boolean|string
+	 */
 	private $connectedDb = false; 
 
 	/**
@@ -75,7 +94,7 @@ class Connect extends \PDO
 	 */
 	public function sqlFormat($sql)
 	{	
-		return str_replace(array('@prefix_', '@charset', '@dbname', '@user', '@host'), array($this->config['prefix'], $this->config['charset'], $this->config['name'], $this->config['user'], $this->config['host']), $sql);
+		return str_replace(array('@prefix_', '@charset', '@dbname', '@user', '@host'), array($this->config['prefix'], $this->config['charset'], $this->config['info']['name'], $this->config['info']['user'], $this->config['info']['host']), $sql);
 	}
 
 	/**
@@ -103,20 +122,24 @@ class Connect extends \PDO
 	public function start() 
 	{
 
-		$dsn = $this->config['dirver'] . ':host=' . $this->config['host'] . ';dbname=' . $this->config['name'] . ';charset=' . $this->config['charset']; 
+
+		$dsn = isset($this->config['type'][1]) ? $this->config['type'][1] : 'mysql';
+
+		$dsn .= ($dsn === 'sqlite') ? ":{$this->config['info']['name']}" : ":host={$this->config['info']['host']};dbname={$this->config['info']['name']};charset={$this->config['charset']}";
+
 		try {
 			
-			parent::__construct($dsn, $this->config['user'], $this->config['pwd'], array(
-			parent::ATTR_ERRMODE => parent::ERRMODE_EXCEPTION,
+			parent::__construct($dsn, $this->config['info']['user'], $this->config['info']['pwd'], array(
+			parent::ATTR_ERRMODE => parent::ERRMODE_SILENT,
 			parent::ATTR_EMULATE_PREPARES => false));
 
 		} catch(\PDOException $e) {
 
-			exit('Failed Connect to Database <br /> Error Info : ' . $e->getMessage());
+			throw new PDMException('Failed Connect to Database <br /> Error Info : ' . $e->getMessage());
 		}	
 
-		$this->connectedDb	= $this->config['name'];
-		$this->isConnected	= true;
+		$this->connectedDb = $this->config['info']['name'];
+		$this->isConnected = true;
 	}
  
 }

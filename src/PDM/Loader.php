@@ -9,28 +9,30 @@
  */
 namespace PDM;
 
-use PDM\Interfaces\Loader as loaderInterface;
+use \PDM\Interfaces\Loader as loaderInterface;
+use \PDM\Exceptions\PDMException;
 
 class Loader implements loaderInterface
 {
 
-	/** 
-	 * load config file
-	 * @param  string $config config file name
-	 * @return array
+	/**
+	 * instance
 	 */
-	public function config($config) 
+	private static $instance;
+
+	/**
+	 * get instance
+	 * @return object
+	 */
+	public static function getInstance()
 	{
 
-		$config = PDM_CONFIG_DIR . DIRECTORY_SEPARATOR . $config . '.config.php';
+		if (self::$instance === null) {
 
-		if (file_exists($config) === false) return false;
+			self::$instance = new self();
+		}
 
-		$config 					= require_once($config);
-		$dbInfo 					= explode(':', $config['manager']);
-		$config['manager'] 	= ucfirst($dbInfo[0]);
-		$config['dirver']		= (isset($dbInfo[1])) ? $dbInfo[1] : null;
-		return $config;  
+		return self::$instance;
 	}
 
 	/**
@@ -41,7 +43,17 @@ class Loader implements loaderInterface
 	 */
 	public function command($command, $config)
 	{
-		$obj = __NAMESPACE__  . '\\' . $command;
+
+		$config = PDM_CONFIG_DIR . DIRECTORY_SEPARATOR . $config . '.config.php';
+
+		if (file_exists($config) === false) {
+
+			throw new PDMException('Error: Config file not found or not exists');
+		}
+
+		$config = require_once($config);
+		$config['type'] = explode(':', $config['type']);
+		$obj = __NAMESPACE__  . '\\' . ucfirst($config['type'][0]). '\\' . $command;
 		return new $obj($config);
 	}
 }

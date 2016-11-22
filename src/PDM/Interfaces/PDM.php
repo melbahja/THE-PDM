@@ -17,5 +17,5 @@ interface PDM
 
 	public static function getInstance();
 
-	public function load($key);
+	public function load($commad, $config);
 }

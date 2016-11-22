@@ -7,24 +7,38 @@
  * @copyright 2016 Dinital.com
  * @license	http://opensource.org/licenses/MIT	MIT License
  */
-namespace PDM;
+namespace PDM\Mysqli;
 
 class DML
 {
 
+	/**
+	 * get db connection
+	 */
 	public $connect;
 
+	/**
+	 * tables prefix
+	 */
 	protected $prefix;
 
+	/**
+	 * insert_ids for multiInsert
+	 * @var array
+	 */
 	protected $insert_ids = array();
 
+	/**
+	 * construct
+	 * @param array $config 
+	 */
 	public function __construct(array $config)
 	{
-		$connect = __NAMESPACE__ . '\\' . $config['manager'] . '\Connect'; 
-		$this->connect = $connect::getInstance();
+
+		$this->connect = Connect::getInstance();
 		$this->prefix	= $config['prefix'];
 		$this->connect->setConfig($config);
-		unset($config, $connect);
+		unset($config['type']);
 	}
 
 	/**
@@ -32,6 +46,8 @@ class DML
 	 */
 	public function __destruct()
 	{
+		
+		if ($this->connect->isConnected() === true) $this->connect->close();
 		$this->connect = null;
 	}
 
@@ -78,7 +94,7 @@ class DML
 		      $data->close();
 		  	}
 
-		  unset($select, $from, $where);
+		  unset($select, $from, $where, $fetch);
 		  return $data; 
     }
 
@@ -124,7 +140,7 @@ class DML
 
 	  	foreach ( $array as $key => $value ) {
 
-	      $this->insert_ids[$key] = ( $this->insert($into, $value) === true ) ? $this->insert_id : false;
+	      $this->insert_ids[$key] = ( $this->insert($into, $value) === true ) ? $this->connect->insert_id : false;
 	  	}
 
 	  	unset($into, $array, $ids);
