@@ -1,4 +1,4 @@
-<?php
+<?php defined('PDM_CONFIG_DIR') || exit;
 
 return array
 (
