@@ -19,9 +19,12 @@ $dml->start();
 
 /**
  * Select DATA 
- * table name is : xprefix_users
+ * table name is : prefix_users
  */
 $users = $dml->getUsers();
+
+/** table : prefix_pages **/
+$pages = $dml->getPages();
 
 
 /** Left Join **/
@@ -32,9 +35,8 @@ $users = $dml->getUsers();
 $ddl = $pdm->load('DDL', 'Database1');
 $ddl->start();
 
-$c = $ddl->create('tableName', array(
-    'id'          => 'int NOT NULL PRIMARY KEY',
-    'name'        => 'varchar(122) COLLATE @charset_general_ci NOT NULL',
-    'username'    => 'varchar(50) COLLATE @charset_general_ci NOT NULL')); // @charset = default charset in config file
+$c = $ddl->create('tableName', 'id int NOT NULL PRIMARY KEY,
+    name varchar(122) COLLATE @charset_general_ci NOT NULL,
+    username varchar(50) COLLATE @charset_general_ci NOT NULL')); // @charset = default charset in config file
 
 var_dump($c);
