@@ -4,16 +4,16 @@
 ## Usage
 
 ### Config file
-edit config folder path in : src/PDM/Constants.config.php
+edit PDM_CONFIG_DIR config folder path in : src/PDM/PDM.php
 
 ### Database Config
 Each database can create a setup file in config directory 
 
-- manager : Database Book PDO or Mysqli
-- host    : Database Host name
-- name    : Databbase name
-- user    : Database user
-- pwd     : database password
+- type : Database Book PDO or Mysqli
+- info.host    : Database Host name
+- info.name    : Databbase name
+- info.user    : Database user
+- info.pwd     : database password
 - prefix  : for security, You can change it at any time
 - charset : db encoding
 
@@ -25,14 +25,18 @@ Each database can create a setup file in config directory
 
 // Database1.config.php
 
-return array(
-	'manager' 	=> 'Mysqli',
-	'host' 		=> 'localhost',
-	'name' 		=> 'databaseNameHere',
-	'user' 		=> 'databaseUserNameHere',
-	'pwd' 		=> 'databasePassword',
-	'prefix' 	=> 'PrefixKey_',
-	'charset' 	=> 'utf8mb4',
+return array
+(
+  'type'  => 'mysqli',
+  'info'  => array
+  (
+  	'host'	=> 'localhost',
+    'name'	=> 'dbname',
+    'user'  => 'root',
+    'pwd'   => '',
+  ),
+  'prefix'    => 'prefix_',
+  'charset'   => 'utf8mb4',
 );
 
 ```
@@ -43,14 +47,18 @@ return array(
 
 // Database2.config.php
 
-return array(
-	'manager' 	=> 'PDO:mysql',
-	'host' 		=> 'localhost',
-	'name' 		=> 'databaseNameHere',
-	'user' 		=> 'databaseUserNameHere',
-	'pwd' 		=> 'databasePassword',
-	'prefix' 	=> 'PrefixKey_',
-	'charset' 	=> 'utf8mb4',
+return array
+(
+  'type'  => 'pdo:mysql',
+  'info'  => array
+  (
+  	'host'	=> 'localhost',
+    'name'	=> 'Dbname',
+    'user'  => 'root',
+    'pwd'   => '',
+  ),
+  'prefix'    => 'prefix_',
+  'charset'   => 'utf8mb4',
 );
 
 ```
@@ -61,13 +69,18 @@ return array(
 
 // Database3.config.php
 
-return array(
-	'manager' 	=> 'PDO:sqlite',
-	'host' 		=> null,
-	'name' 		=> 'path/to/databaseFile.db',
-	'user' 		=> null,
-	'pwd' 		=> null,
-	'prefix' 	=> 'PrefixKey_',
+return array
+(
+  'type'  => 'pdo:sqlite',
+  'info'  => array
+  (
+     'host' => NULL,
+    'name'  => 'path/to/sqlite.sq3',
+    'user'  => NULL,
+    'pwd'   => NULL,
+  ),
+  'prefix'    => 'prefix_',
+  'charset'   => NULL,
 );
 
 ```
@@ -187,4 +200,4 @@ $user = $dml->selectOne('first_name, last_name', 'users', 'WHERE id=1');
 echo $user['last_name'];
 
 ```
-Please read the classes doc for more information
+Please read the classes doc for more information & examples dir
