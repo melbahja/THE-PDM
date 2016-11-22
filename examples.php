@@ -14,6 +14,9 @@ $pdm = PDM\PDM::getInstance();
  */
 $dml = pdm->load('DML', 'Database1');
 
+/** start connection **/
+$dml->start();
+
 /**
  * Select DATA 
  * table name is : xprefix_users
