@@ -103,7 +103,9 @@ class Connect extends \PDO
 	public function start() 
 	{
 
-		$dsn = $this->config['dirver'] . ':host=' . $this->config['host'] . ';dbname=' . $this->config['name'] . ';charset=' . $this->config['charset']; 
+		$dsn = $this->config['dirver'];
+		$dsn .= ($this->config['dirver'] === 'sqlite') ? ':' . $this->config['name'] : ':host=' . $this->config['host'] . ';dbname=' . $this->config['name'] . ';charset=' . $this->config['charset'];
+
 		try {
 			
 			parent::__construct($dsn, $this->config['user'], $this->config['pwd'], array(
