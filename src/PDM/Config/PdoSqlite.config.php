@@ -10,6 +10,6 @@ return array
     'user'  => NULL,
     'pwd'   => NULL,
   ),
-  'prefix'    => 'ganassi_',
+  'prefix'    => 'prefix_',
   'charset'   => NULL,
 );
