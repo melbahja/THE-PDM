@@ -122,10 +122,15 @@ class Connect extends \PDO
 	public function start() 
 	{
 
+<<<<<<< HEAD:src/PDM/Pdo/Connect.php
 
 		$dsn = isset($this->config['type'][1]) ? $this->config['type'][1] : 'mysql';
 
 		$dsn .= ($dsn === 'sqlite') ? ":{$this->config['info']['name']}" : ":host={$this->config['info']['host']};dbname={$this->config['info']['name']};charset={$this->config['charset']}";
+=======
+		$dsn = $this->config['dirver'];
+		$dsn .= ($this->config['dirver'] === 'sqlite') ? ':' . $this->config['name'] : ':host=' . $this->config['host'] . ';dbname=' . $this->config['name'] . ';charset=' . $this->config['charset'];
+>>>>>>> b00ff1943fc3cc3c52cdf51dc9adc953885774cd:src/PDM/PDO/Connect.php
 
 		try {
 			
