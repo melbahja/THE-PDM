@@ -73,7 +73,7 @@ class DDL
 	 */
 	public function drop($sql)
 	{
-		return $this->connect->query('DROP ' . $sql);
+		return $this->connect->query('DROP ' . $this->connect->sqlFormat($sql) );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class DDL
 	 */
 	public function alter($table, $sql)
 	{
-		return $this->connect->query($this->sqlFormat("ALTER TABLE {$this->prefix}{$table} $sql"));
+		return $this->connect->query($this->connect->sqlFormat("ALTER TABLE {$this->prefix}{$table} $sql"));
 	}
 
 	/**
