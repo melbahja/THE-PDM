@@ -22,8 +22,8 @@ $ddl->start();
  * create table
  */
 
-// if ($ddl->create('TableName', 'firstname VARCHAR(40) NOT NULL,
-// lastname VARCHAR(50) NOT NULL, .....') === true ) {
+// if ($ddl->create('TableName', '(firstname VARCHAR(40) NOT NULL,
+// lastname VARCHAR(50) NOT NULL, .....);') === true ) {
 
 // 	// true
 // }
